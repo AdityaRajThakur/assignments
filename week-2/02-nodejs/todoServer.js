@@ -41,9 +41,104 @@
  */
   const express = require('express');
   const bodyParser = require('body-parser');
-  
+  // const port = 8000 ; 
   const app = express();
+  let todo = [
+    // {
+    //   'id':1024,
+    //   "title":"Buy groceries" , 
+    //   "completed" : false,
+    //   "description": "I should buy groceries from the shop", 
+    // },
+    // {
+    //   "id":1021,
+    //   "title":"Buy Computer" , 
+    //   "completed" : true,
+    //   "description": "You should buy a computer, for your job", 
+    // }
+  ]
+  function generateUniqueRandomNumber() {
+    const timestamp = new Date().getTime();
+    const random = Math.random();
+    const uniqueRandomNumber = Math.floor(random * timestamp);
+    return uniqueRandomNumber;
+  }
+  
   
   app.use(bodyParser.json());
-  
+
+  app.get('/todos' , (req, res)=>{
+    res.status(200).send(todo) ; 
+  });
+
+  app.get('/todos/:id' , (req,res)=>{
+    const id = req.params.id 
+   // console.log(typeof(+id)) ; 
+    let item = null ; 
+    for(const x of todo){
+      // console.log(+x["id"]) ; 
+      if(+id==+x.id){
+        item = x; 
+        break; 
+      }
+    }
+    if(item==null){
+      return res.status(404).send("404 not found") ; 
+    }
+    res.status(200).json(item);
+  });
+
+  app.post('/todos',async (req,res)=>{
+    // console.log(req.body) ; 
+    let td = req.body ;
+    
+    const randomNumber = await generateUniqueRandomNumber();
+    // console.log(randomNumber);
+    td['id'] = randomNumber 
+    todo.push(td) ; 
+    res.status(201).send({"id":randomNumber})  ;
+  })
+
+  app.put('/todos/:id',(req, res)=>{
+    const id = req.params.id 
+    const obj = req.body 
+    let n = null 
+    for(const i in todo){
+      if(+id ==todo[i].id){
+        n = i ; 
+        break ; 
+      }
+    }
+    if(n==null){
+      return res.status(404).send("404 Not Found") ; 
+    }
+    for (const key in obj){
+      todo[n][key] = obj[key] ; 
+    }
+    res.status(200).send(); 
+  })
+
+  app.delete('/todos/:id',(req,res)=>{
+    const id = req.params.id 
+    let found = false ; 
+    for (const i in todo){
+      if(+id == todo[i]["id"]){
+        todo.splice(i , 1) ; 
+        found = true ; 
+        break ; 
+      }
+    }
+    if(!found){
+      return res.status(404).send("404 Not Found")
+    }
+    res.status(200).send() ; 
+  })
+
+
+  app.all('*', (req, res) => {
+    res.status(404).send('Route not found');
+  });
+
   module.exports = app;
+
+  // app.listen(port)  ; 
