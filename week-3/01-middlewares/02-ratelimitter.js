@@ -2,6 +2,7 @@ const request = require('supertest');
 const assert = require('assert');
 const express = require('express');
 const app = express();
+
 // You have been given an express server which has a few endpoints.
 // Your task is to create a global middleware (app.use) which will
 // rate limit the requests from a user to only 5 request per second
@@ -10,12 +11,27 @@ const app = express();
 // User will be sending in their user id in the header as 'user-id'
 // You have been given a numberOfRequestsForUser object to start off with which
 // clears every one second
-
 let numberOfRequestsForUser = {};
 setInterval(() => {
     numberOfRequestsForUser = {};
 }, 1000)
 
+
+function rateLimitter(req , res , next){
+  const userid = req.headers['user-id'] ; 
+  if(userid in numberOfRequestsForUser){
+    if(numberOfRequestsForUser[userid] <5){
+      numberOfRequestsForUser[userid]++ ; 
+    }else{
+      return res.status(404).json("out of limit") ; 
+    }
+  }else{
+    numberOfRequestsForUser[userid] = 1; 
+  }
+  next() ; 
+}
+
+app.use(rateLimitter) ; 
 app.get('/user', function(req, res) {
   res.status(200).json({ name: 'john' });
 });
