@@ -6,6 +6,7 @@ function userMiddleware(req, res, next) {
     const token = req.headers['authorization'].split(" ")[1] ; 
     const value = jwt.verify(token , JWT_PASSWORD); 
     if(value.username){
+        req.headers.username = value.username ; 
         next() ; 
     }else{
         res.status(404).json({

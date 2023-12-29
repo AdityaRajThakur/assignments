@@ -59,11 +59,13 @@ router.get('/courses', async (req, res) => {
 router.post('/courses/:courseId', userMiddleware, (req, res) => {
     // Implement course purchase logic
     const courseid = req.params.courseId ; 
-    const username  = req.body['username'];  
-    const password = req.body['password'] ; 
+    // const authorization = req.headers.authorization.split(" ")[1] ; 
+    // const user_obj = jwt.decode(authorization, JWT_PASSWORD) ; 
+    // console.log(username_.username) ; 
+    const username  = req.headers.username ;   
+    // const password =  user_obj.password;  
     const user = User.updateOne({
         username : username,
-        password : password 
     }, {
         $push : {
             purchasedCourse :courseid
@@ -71,6 +73,10 @@ router.post('/courses/:courseId', userMiddleware, (req, res) => {
     }).then((value)=>{
         res.status(200).json({
             "message" : "Course purchased successfully"
+        })
+    }).catch((err)=>{
+        res.status(404).send({
+            "msg":"failed to purchase course"
         })
     })
 });
