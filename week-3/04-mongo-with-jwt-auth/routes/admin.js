@@ -17,6 +17,7 @@ router.post('/courses', adminMiddleware, (req, res) => {
 
 router.get('/courses', adminMiddleware, (req, res) => {
     // Implement fetching all courses logic
+    res.send("this is good") ; 
 });
 
 module.exports = router;
