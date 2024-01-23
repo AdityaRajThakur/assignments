@@ -5,14 +5,37 @@ import React, { useState, useMemo } from 'react';
 export const Assignment3 = () => {
     const [items, setItems] = useState([
         { name: 'Chocolates', value: 10 },
+        { name: 'Chocolates', value: 10 },
+        { name: 'Chocolates', value: 10 },
+        { name: 'Chips', value: 20 },
+        { name: 'Chips', value: 20 },
+        { name: 'Chips', value: 20 },
         { name: 'Chips', value: 20 },
         { name: 'Onion', value: 30 },
+        { name: 'Onion', value: 30 },
+        { name: 'Tomato', value: 30 },
+        { name: 'Tomato', value: 30 },
+        { name: 'Tomato', value: 30 },
+        { name: 'Tomato', value: 30 },
+        { name: 'Tomato', value: 30 },
+        { name: 'Tomato', value: 30 },
+        { name: 'Tomato', value: 30 },
+        { name: 'Tomato', value: 30 },
+        { name: 'Tomato', value: 30 },
+        { name: 'Tomato', value: 30 },
         { name: 'Tomato', value: 30 },
         // Add more items as needed
     ]);
 
     // Your code starts here
-    const totalValue = 0;
+    const totalValue = useMemo(()=>{
+        let sum = 0 ; 
+        items.map((item)=>{
+            sum+=item.value ; 
+            // console.log(sum) ; 
+        });
+        return sum ; 
+    },[items])
     // Your code ends here
     return (
         <div>
